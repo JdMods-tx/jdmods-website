@@ -2,6 +2,8 @@
 import Link from "next/link";
 import type { SiteSettings } from "@/lib/types";
 
+const YEAR = new Date().getFullYear();
+
 export default function Footer({ settings }: { settings: SiteSettings }) {
   const { contact, socials } = settings;
   return (
@@ -35,7 +37,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
           </div>
         )}
       </div>
-      <p className="footer-fine">© {new Date().getFullYear()} JDMods. All rights reserved.</p>
+      <p className="footer-fine">© {YEAR} JDMods. All rights reserved.</p>
     </footer>
   );
 }
