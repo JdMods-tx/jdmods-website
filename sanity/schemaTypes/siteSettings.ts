@@ -7,6 +7,7 @@ export const siteSettings = defineType({
   type: "document",
   fields: [
     defineField({ name: "tagline", type: "string", description: "Hero subtitle" }),
+    defineField({ name: "heroImage", title: "Hero background photo", type: "image", options: { hotspot: true }, description: "Wide, dark, high-resolution photo (at least 2400px wide). Leave empty to use the built-in background." }),
     defineField({
       name: "stats", type: "array",
       of: [defineArrayMember({

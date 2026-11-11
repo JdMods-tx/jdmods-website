@@ -17,6 +17,7 @@ export type Stat = { label: string; value: number; suffix?: string };
 
 export type SiteSettings = {
   tagline?: string;
+  heroImage?: string | null;
   stats: Stat[];
   marquee: string[];
   contact: { email?: string; phone?: string; address?: string };

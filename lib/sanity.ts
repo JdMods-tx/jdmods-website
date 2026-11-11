@@ -36,7 +36,8 @@ export const getFeaturedVehicles = cache(() =>
 export const getSettings = cache(async () => {
   const s = await load<Partial<SiteSettings> | null>(
     `*[_type == "siteSettings"][0]{
-      tagline, stats[]{label, value, suffix}, marquee,
+      tagline, "heroImage": heroImage.asset->url + "?w=2400&auto=format",
+      stats[]{label, value, suffix}, marquee,
       contact, socials[]{label, url}
     }`,
     null,

@@ -1,103 +1,74 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform,
-} from "framer-motion";
-import Gauge from "./Gauge";
-import SpeedLines from "./SpeedLines";
-import { useEngineSound } from "@/lib/useEngineSound";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import styles from "./Hero.module.css";
 
-const LINES = ["Feel it", "before you", "see it."];
+const reveal = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] as const },
+});
 
-export default function Hero({ tagline }: { tagline?: string }) {
-  const rpm = useMotionValue(1);
-  const spring = useSpring(rpm, { stiffness: 70, damping: 12, mass: 0.8 });
-  const held = useRef(false);
-  const [pressed, setPressed] = useState(false);
-  const [red, setRed] = useState(false);
-  const sound = useEngineSound(spring);
-
+export default function Hero({ tagline, image }: { tagline?: string; image?: string | null }) {
   const root = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: root, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  // idle flutter
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (!held.current) rpm.set(1 + Math.random() * 0.25);
-    }, 140);
-    return () => clearInterval(id);
-  }, [rpm]);
-
-  useEffect(
-    () => spring.on("change", (v) => setRed((r) => (v > 7.4 === r ? r : v > 7.4))),
-    [spring],
-  );
-
-  const press = () => { held.current = true; setPressed(true); rpm.set(9); };
-  const release = () => { held.current = false; setPressed(false); rpm.set(1.2); };
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <section ref={root} className={`hero ${red ? "is-red" : ""}`}>
-      <SpeedLines rpm={spring} />
-      <div className="hero-flash" />
+    <section ref={root} className={styles.hero}>
+      <motion.div className={styles.bg} style={{ y: bgY }} aria-hidden>
+        {image ? (
+          <div className={styles.photo}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={image} alt="" />
+          </div>
+        ) : (
+          <div className={styles.atmos}>
+            <i className={`${styles.streak} ${styles.s1}`} />
+            <i className={`${styles.streak} ${styles.s2}`} />
+            <i className={`${styles.streak} ${styles.s3}`} />
+          </div>
+        )}
+      </motion.div>
+      <div className={styles.shade} aria-hidden />
 
-      <motion.div className="hero-copy" style={{ y, opacity: fade }}>
-        <p className="eyebrow"><span>01</span> JDMods · Japanese Domestic Market</p>
-        <h1 className="hero-title" aria-label="Feel it before you see it.">
-          {LINES.map((l, i) => (
-            <span className="line" key={l}>
-              <motion.span
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: [0.2, 0.8, 0.2, 1] }}
-              >
-                {l}
-              </motion.span>
-            </span>
-          ))}
-        </h1>
-        <motion.p className="hero-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+      <motion.div className={styles.content} style={{ y: textY, opacity: fade }}>
+        <motion.p className={styles.kicker} {...reveal(0.1)}>
+          Japanese domestic market · Imports &amp; builds
+        </motion.p>
+        <motion.h1 className={styles.title} {...reveal(0.2)}>
+          Feel it before
+          <br />
+          you <span className={styles.accent}>see it.</span>
+        </motion.h1>
+        <motion.p className={styles.sub} {...reveal(0.35)}>
           {tagline}
         </motion.p>
-        <motion.div className="hero-cta" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
-          <Link href="/inventory" className="btn btn-red" data-cursor="Garage">Enter the garage →</Link>
-          <Link href="/import" className="btn btn-ghost" data-cursor="Import">How importing works</Link>
+        <motion.div className={styles.actions} {...reveal(0.5)}>
+          <Link href="/inventory" className={styles.primary} data-cursor="Garage">
+            View inventory
+          </Link>
+          <Link href="/import" className={styles.secondary} data-cursor="Import">
+            How importing works
+          </Link>
         </motion.div>
       </motion.div>
 
-      <div className="hero-stage">
-        <button
-          className={`gauge-btn ${pressed ? "down" : ""}`}
-          onPointerDown={press}
-          onPointerUp={release}
-          onPointerLeave={() => held.current && release()}
-          onPointerCancel={release}
-          onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(); } }}
-          onKeyUp={(e) => { if (e.key === " " || e.key === "Enter") release(); }}
-          onContextMenu={(e) => e.preventDefault()}
-          data-cursor="Hold"
-          aria-label="Hold to rev the engine"
-        >
-          <Gauge rpm={spring} />
-        </button>
-        <p className="hold-hint">{pressed ? "Keep holding…" : "Press & hold to rev"}</p>
-        <AnimatePresence>
-          {red && (
-            <motion.div className="redline" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-              REDLINE
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <button className="sound-btn" onClick={sound.toggle} aria-pressed={sound.on}>
-          Sound {sound.on ? "on" : "off"}
-        </button>
-      </div>
-
-      <div className="scroll-cue" aria-hidden><span />Scroll</div>
+      <nav className={styles.strip} aria-label="Quick links">
+        <Link href="/inventory" data-cursor="Go">
+          Inventory <span className={styles.arrow}>→</span>
+        </Link>
+        <Link href="/import" data-cursor="Go">
+          Import a car <span className={styles.arrow}>→</span>
+        </Link>
+        <Link href="/parts" data-cursor="Go">
+          Parts &amp; mods <span className={styles.arrow}>→</span>
+        </Link>
+      </nav>
     </section>
   );
 }

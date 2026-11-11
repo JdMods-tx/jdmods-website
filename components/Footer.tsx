@@ -5,7 +5,11 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
   const { contact, socials } = settings;
   return (
     <footer className="footer">
-      <div className="footer-big" aria-hidden>JDMODS</div>
+      <Link href="/" className="brand" aria-label="JDMods home">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/jdmods.svg" alt="" />
+        <span>JD<b>Mods</b></span>
+      </Link>
       <div className="footer-cols">
         <div>
           <h4>Contact</h4>
