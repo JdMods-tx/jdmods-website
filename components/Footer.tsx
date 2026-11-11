@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import type { SiteSettings } from "@/lib/types";
 
@@ -19,10 +20,11 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
         </div>
         <div>
           <h4>Index</h4>
-          <Link href="/#garage">Inventory</Link>
-          <Link href="/#process">Import</Link>
-          <Link href="/#stats">About</Link>
-          <Link href="/#contact">Contact</Link>
+          <Link href="/inventory">Inventory</Link>
+          <Link href="/import">Import</Link>
+          <Link href="/parts">Parts</Link>
+          <Link href="/builds">Builds</Link>
+          <Link href="/about">About</Link>
         </div>
         {socials.length > 0 && (
           <div>
@@ -37,3 +39,4 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
     </footer>
   );
 }
+
