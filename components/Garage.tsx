@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import type { Vehicle } from "@/lib/types";
 
 function Card({ v, i }: { v: Vehicle; i: number }) {
@@ -12,7 +12,7 @@ function Card({ v, i }: { v: Vehicle; i: number }) {
   const sry = useSpring(ry, { stiffness: 200, damping: 18 });
 
   return (
-    <motion.div style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }} className="card-wrap"
+    <motion.div data-card style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }} className="card-wrap"
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         ry.set(((e.clientX - r.left) / r.width - 0.5) * 12);
@@ -46,41 +46,51 @@ function Card({ v, i }: { v: Vehicle; i: number }) {
   );
 }
 
-/** Pinned section: vertical scroll drives a horizontal ride through the garage. */
+/** Horizontal showcase. Arrow buttons move through the vehicles. */
 export default function Garage({ vehicles }: { vehicles: Vehicle[] }) {
-  const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const [dist, setDist] = useState(0);
+  const [edge, setEdge] = useState({ start: true, end: false });
+
+  const update = () => {
+    const el = track.current;
+    if (!el) return;
+    setEdge({
+      start: el.scrollLeft <= 4,
+      end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4,
+    });
+  };
 
   useEffect(() => {
-    const measure = () => {
-      if (track.current) setDist(Math.max(0, track.current.scrollWidth - window.innerWidth));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (track.current) ro.observe(track.current);
-    window.addEventListener("resize", measure);
-    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, [vehicles.length]);
 
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -dist]);
-  const bar = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const go = (dir: 1 | -1) => {
+    const el = track.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-card]");
+    const step = card ? card.getBoundingClientRect().width + 28 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
 
   return (
-    <section ref={section} className="garage" style={{ height: `calc(100vh + ${dist}px)` }}>
-      <div className="garage-pin">
-        <header className="garage-head">
+    <section id="garage" className="garage">
+      <header className="garage-head">
+        <div>
           <p className="eyebrow"><span>02</span> The garage</p>
           <h2>Pick your <em>weapon.</em></h2>
-        </header>
-        <motion.div ref={track} className="garage-track" style={{ x }}>
-          {vehicles.map((v, i) => <Card key={v._id} v={v} i={i} />)}
-          <Link href="/inventory" className="garage-all" data-cursor="All">
-            <span>See the full inventory</span><b>→</b>
-          </Link>
-        </motion.div>
-        <div className="garage-progress"><motion.i style={{ scaleX: bar }} /></div>
+        </div>
+        <div className="garage-arrows">
+          <button onClick={() => go(-1)} disabled={edge.start} aria-label="Previous vehicle" data-cursor="Prev">←</button>
+          <button onClick={() => go(1)} disabled={edge.end} aria-label="Next vehicle" data-cursor="Next">→</button>
+        </div>
+      </header>
+      <div ref={track} className="garage-track" onScroll={update}>
+        {vehicles.map((v, i) => <Card key={v._id} v={v} i={i} />)}
+        <Link href="/inventory" className="garage-all" data-cursor="All">
+          <span>See the full inventory</span><b>→</b>
+        </Link>
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 
 export default function Stats({ stats }: { stats: Stat[] }) {
   return (
-    <section className="stats">
+    <section id="stats" className="stats">
       {stats.map((s) => (
         <div className="stat" key={s.label}>
           <strong><Counter to={s.value} suffix={s.suffix} /></strong>

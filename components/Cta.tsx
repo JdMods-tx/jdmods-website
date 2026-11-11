@@ -8,7 +8,7 @@ export default function Cta() {
   const y = useSpring(useMotionValue(0), { stiffness: 150, damping: 12 });
 
   return (
-    <section className="cta">
+    <section id="contact" className="cta">
       <p className="eyebrow"><span>04</span> Your move</p>
       <h2>Your chassis<br />is <em>waiting.</em></h2>
       <motion.div

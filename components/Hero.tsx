@@ -49,24 +49,24 @@ export default function Hero({ tagline, image }: { tagline?: string; image?: str
           {tagline}
         </motion.p>
         <motion.div className={styles.actions} {...reveal(0.5)}>
-          <Link href="/inventory" className={styles.primary} data-cursor="Garage">
+          <Link href="/#garage" className={styles.primary} data-cursor="Garage">
             View inventory
           </Link>
-          <Link href="/import" className={styles.secondary} data-cursor="Import">
+          <Link href="/#process" className={styles.secondary} data-cursor="Import">
             How importing works
           </Link>
         </motion.div>
       </motion.div>
 
       <nav className={styles.strip} aria-label="Quick links">
-        <Link href="/inventory" data-cursor="Go">
+        <Link href="/#garage" data-cursor="Go">
           Inventory <span className={styles.arrow}>→</span>
         </Link>
-        <Link href="/import" data-cursor="Go">
+        <Link href="/#process" data-cursor="Go">
           Import a car <span className={styles.arrow}>→</span>
         </Link>
-        <Link href="/parts" data-cursor="Go">
-          Parts &amp; mods <span className={styles.arrow}>→</span>
+        <Link href="/#contact" data-cursor="Go">
+          Start an inquiry <span className={styles.arrow}>→</span>
         </Link>
       </nav>
     </section>

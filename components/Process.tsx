@@ -28,7 +28,7 @@ export default function Process() {
   const pct = useTransform(scrollYProgress, (v) => `${Math.round(Math.min(1, Math.max(0, v)) * 100)}%`);
 
   return (
-    <section ref={ref} className="process">
+    <section id="process" ref={ref} className="process">
       <div className="process-side">
         <p className="eyebrow"><span>03</span> The process</p>
         <h2>From Japan to <em>your driveway.</em></h2>
