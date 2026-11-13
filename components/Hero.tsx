@@ -38,7 +38,6 @@ export default function Hero({ tagline, image }: { tagline?: string; image?: str
 
       <motion.div className={styles.content} style={{ y: textY, opacity: fade }}>
         <motion.p className={styles.kicker} {...reveal(0.1)}>
-          Japanese domestic market · Imports &amp; builds
         </motion.p>
         <motion.h1 className={styles.title} {...reveal(0.2)}>
           Feel it before

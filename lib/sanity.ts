@@ -33,6 +33,13 @@ export const getFeaturedVehicles = cache(() =>
   ),
 );
 
+export const getAllVehicles = cache(() =>
+  load<Vehicle[]>(
+    `*[_type == "vehicle"] | order(_createdAt desc){${VEHICLE_FIELDS}}`,
+    fallbackVehicles,
+  ),
+);
+
 export const getSettings = cache(async () => {
   const s = await load<Partial<SiteSettings> | null>(
     `*[_type == "siteSettings"][0]{

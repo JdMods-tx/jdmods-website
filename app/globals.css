@@ -147,3 +147,23 @@ em { font-style: normal; color: var(--red); }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
 }
+
+/* inventory */
+.inv-page { min-height: 100vh; padding: 140px var(--pad) clamp(80px, 10vw, 140px); }
+.inv-head h1 { font: 600 clamp(48px, 7vw, 112px)/.95 var(--font-display); text-transform: uppercase; }
+.inv-sub { max-width: 52ch; margin: 20px 0 0; color: var(--mute); font-size: 18px; line-height: 1.5; }
+.inv-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin: 48px 0 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.inv-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.inv-tabs button, .inv-chips button, .inv-empty button { padding: 10px 18px; border: 1px solid var(--line); font: 600 13px var(--font-body); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); transition: color .2s, background .2s, border-color .2s; }
+.inv-tabs button:hover, .inv-chips button:hover, .inv-empty button:hover { color: var(--ink); border-color: rgba(255,255,255,.35); }
+.inv-tabs button[aria-pressed="true"], .inv-chips button[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+.inv-tabs small { margin-left: 8px; font-size: 11px; opacity: .7; }
+.inv-search { width: min(100%, 340px); padding: 12px 16px; background: #0f141d; border: 1px solid var(--line); color: var(--ink); font: 500 15px var(--font-body); }
+.inv-search::placeholder { color: var(--mute); }
+.inv-search:focus { outline: none; border-color: var(--red); }
+.inv-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.inv-count { margin: 0 0 28px; font: 12px var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+.inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 28px; }
+.inv-grid .vcard { width: 100%; }
+.inv-empty { padding: 80px 0; text-align: center; color: var(--mute); }
+.inv-empty button { margin-top: 16px; }
