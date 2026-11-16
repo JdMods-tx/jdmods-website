@@ -40,9 +40,7 @@ export default function Hero({ tagline, image }: { tagline?: string; image?: str
         <motion.p className={styles.kicker} {...reveal(0.1)}>
         </motion.p>
         <motion.h1 className={styles.title} {...reveal(0.2)}>
-          Feel it before
-          <br />
-          you <span className={styles.accent}>see it.</span>
+          Fired <span className={styles.accent}>Up</span>
         </motion.h1>
         <motion.p className={styles.sub} {...reveal(0.35)}>
           {tagline}

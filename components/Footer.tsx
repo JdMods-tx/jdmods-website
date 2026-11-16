@@ -27,6 +27,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
           <Link href="/parts">Parts</Link>
           <Link href="/builds">Builds</Link>
           <Link href="/about">About</Link>
+          <Link href="/studio">Admin Portal</Link>
         </div>
         {socials.length > 0 && (
           <div>
